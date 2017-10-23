@@ -18,13 +18,17 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         handle method of the server class
         (all requests will be handled by this method)
         """
-
-        self.wfile.write(b"Hemos recibido tu peticion")
         for line in self.rfile:
-            line.decode('utf-8')
-            dicc_Data[SERVER] =  port
-            print("El cliente nos manda ", dicc_Data[SERVER])
-
+            DATA = line.decode('utf-8').split()
+            if DATA:
+                if DATA[3] == '0':
+                    del self.dicc_Data[DATA[2]]
+                    self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
+                elif int(DATA[3]) >= 0:
+                    print(line.decode("utf-8") + "Expires:", DATA[3])
+                    self.dicc_Data[DATA[2]] = self.client_address[0], DATA[3]
+                    self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
+                print(self.dicc_Data)
 if __name__ == "__main__":
     # Listens at localhost ('') port 6001
     # and calls the EchoHandler class to manage the request
