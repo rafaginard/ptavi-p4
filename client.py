@@ -14,7 +14,7 @@ LINE = sys.argv[4]
 EXPIRES = sys.argv[5]
 
 def register():
-    DATA = " ".join(["REGISTER sip:", LINE, EXPIRES, "SIP/2.0\r\n\r\n"])
+    DATA = " ".join(["REGISTER sip:", LINE, "Expires: ", EXPIRES, "SIP/2.0\r\n\r\n"])
     my_socket.send(bytes(DATA, "utf-8"))
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
