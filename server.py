@@ -27,16 +27,16 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         for line in self.rfile:
             DATA = line.decode('utf-8').split()
             if DATA:
-                if int(DATA[3]) == 0:
+                if int(DATA[4]) == 0:
                     try:
-
                         del self.dicc_Data[DATA[2]]
                         self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
                     except KeyError:
                         self.wfile.write(b"SIP/2.0 404 User Not Found\r\n\r\n")
-                elif int(DATA[3]) >= 0:
-                    print(line.decode("utf-8") + "Expires:", DATA[3],"\r\n\r\n")
-                    self.dicc_Data[DATA[2]] = self.client_address[0], DATA[3]
+                elif int(DATA[4]) >= 0:
+                    DATA_LIST= " ".join(DATA[0:3] + DATA[5:])
+                    print( DATA_LIST,"\r\n\r\n")
+                    self.dicc_Data[DATA[2]] = self.client_address[0], DATA[4]
                     self.register2json(DATA[2])
                     self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
                 #IMPRIME MI DICCIONARIO
