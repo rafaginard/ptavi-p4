@@ -15,7 +15,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
     Echo server class
     """
     dicc_Data = {}
-    Time_Format = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()))
+
     def register2json(self):
         with open("register.json", "w") as data_file:
             json.dump(self.dicc_Data, data_file)
@@ -29,16 +29,15 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
 
     def check_server(self):
         dicc_Temp = {}
+        Time_Format = time.strftime("%Y-%m-%d %H:%M:%S",
+                                    time.gmtime(time.time()))
         if self.dicc_Data:
             print("ENTRA AL CHECK")
             for user in self.dicc_Data:
                 tiempo = self.dicc_Data[user][1]
                 dicc_Temp[user] = tiempo[9:]
             for user in dicc_Temp:
-                print(user, ": ", dicc_Temp[user])
-                Lo_Cumple = dicc_Temp[user] < self.Time_Format
-                print(Lo_Cumple)
-                if Lo_Cumple:
+                if dicc_Temp[user] < Time_Format:
                     del self.dicc_Data[user]
             self.register2json()
 
@@ -62,15 +61,16 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
                 except KeyError:
                     self.wfile.write(b"SIP/2.0 404 User Not Found\r\n\r\n")
             elif int(DATA[5]) >= 0:
-                DATA_LIST= " ".join(DATA[0:4] + DATA[4:])
+                DATA_LIST = " ".join(DATA[0:4] + DATA[4:])
                 tiempo_exp = float(DATA[5]) + time.time()
-                tiempo_exp = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(tiempo_exp))
-                print( DATA_LIST,"\r\n\r\n")
-                self.dicc_Data[DATA[2]] = self.client_address[0],"Expires: " + tiempo_exp
+                tiempo_exp = time.strftime("%Y-%m-%d %H:%M:%S",
+                                           time.gmtime(tiempo_exp))
+                print(DATA_LIST, "\r\n\r\n")
+                self.dicc_Data[DATA[2]] = (self.client_address[0],
+                                           "Expires: " + tiempo_exp)
                 self.register2json()
                 self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
-            #IMPRIME MI DICCIONARIO
-        print(self.dicc_Data)
+
 if __name__ == "__main__":
     # Listens at localhost ('') port 6001
     # and calls the EchoHandler class to manage the request
