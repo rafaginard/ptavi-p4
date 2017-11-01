@@ -4,10 +4,10 @@
 Clase (y programa principal) para un servidor de eco en UDP simple
 """
 
-import time
 import json
 import socketserver
 import sys
+import time
 
 
 class SIPRegisterHandler(socketserver.DatagramRequestHandler):
@@ -17,10 +17,17 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
     dicc_Data = {}
 
     def register2json(self):
+        """
+        Convierte mi biblioteca de datos a un archivo json
+        """"
         with open("register.json", "w") as data_file:
             json.dump(self.dicc_Data, data_file)
 
     def json2registered(self):
+        """
+        Recoge los datos del archivo json (si existe) y los
+        vuelca en mi diccioario de datos
+        """
         try:
             with open("register.json", "r") as data_file:
                 self.dicc_Data = json.load(data_file)
@@ -28,11 +35,13 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
             pass
 
     def check_server(self):
+        """
+        Comprueba los usuarios caducados
+        """
         dicc_Temp = {}
         Time_Format = time.strftime("%Y-%m-%d %H:%M:%S",
                                     time.gmtime(time.time()))
         if self.dicc_Data:
-            print("ENTRA AL CHECK")
             for user in self.dicc_Data:
                 tiempo = self.dicc_Data[user][1]
                 dicc_Temp[user] = tiempo[9:]
