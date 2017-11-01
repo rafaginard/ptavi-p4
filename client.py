@@ -13,8 +13,10 @@ PORT = int(sys.argv[2])
 LINE = sys.argv[4]
 EXPIRES = sys.argv[5]
 
+
 def register():
-    DATA = "REGISTER sip: " + LINE + " SIP/2.0\r\nExpires: " + EXPIRES + "\r\n\r\n"
+    DATA = ("REGISTER sip: " + LINE + " SIP/2.0\r\nExpires: " +
+            EXPIRES + "\r\n\r\n")
     print(DATA)
     my_socket.send(bytes(DATA, "utf-8"))
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
