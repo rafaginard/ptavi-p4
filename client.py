@@ -15,9 +15,8 @@ EXPIRES = sys.argv[5]
 
 
 def register():
-    DATA = ("REGISTER sip: " + LINE + " SIP/2.0\r\nExpires: " +
+    DATA = ("REGISTER sip:" + LINE + " SIP/2.0\r\nExpires: " +
             EXPIRES + "\r\n\r\n")
-    print(DATA)
     my_socket.send(bytes(DATA, "utf-8"))
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
@@ -25,7 +24,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
     print("Enviando:", LINE)
     if sys.argv[3] == "register":
         register()
-#    my_socket.send(bytes(LINE, 'utf-8') + b'\r\n')
     data = my_socket.recv(1024)
     print('Recibido -- ', data.decode('utf-8'))
 
